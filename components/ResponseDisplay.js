@@ -1,25 +1,29 @@
 // file: /components/ResponseDisplay.js
 const ResponseDisplay = ({ data, error, loading }) => {
-  let content;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!data) return null;
 
-  if (loading) {
-    content = "Loading...";
-  } else if (error) {
-    content = `Error: ${error.message}`;
-  } else if (data) {
-    console.log("Data from OpenAI API in display: ", data.result);
-
-    content = (
-      <>
-        <p>Name: {data.result.animalPetName}</p>
-        <p>Description: {data.result.description}</p>
-      </>
-    );
-  } else {
-    content = "";
-  }
-
-  return <div className="response-display">{content}</div>;
+  return (
+    <div className="response-display">
+      <h2>{data.result.title}</h2>
+      <ul>
+        {data.result.steps.map((step, index) => (
+          <li key={index}>{step}</li>
+        ))}
+      </ul>
+      {data.result.expert_tips && (
+        <>
+          <h3>Expert Tips:</h3>
+          <ul>
+            {data.result.expert_tips.map((tip, index) => (
+              <li key={index}>{tip}</li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default ResponseDisplay;
